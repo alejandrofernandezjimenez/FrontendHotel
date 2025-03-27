@@ -12,27 +12,31 @@ function ListaReservas({ reservas }) {
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>ID Reserva</th>
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>Check-In</th>
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>Check-Out</th>
-                <th style={{ padding: '10px', border: '1px solid #ddd' }}>ID Cliente</th>
+                <th style={{ padding: '10px', border: '1px solid #ddd' }}>Cliente</th>
+                <th style={{ padding: '10px', border: '1px solid #ddd' }}>Email</th>
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>ID Habitación</th>
               </tr>
             </thead>
             <tbody>
-              {reservas.map((reserva, index) => (
-                <tr key={reserva.id_reserva || index} style={{ textAlign: 'center' }}>
+              {reservas.map((item, index) => (
+                <tr key={item.reserva?.idReserva || index} style={{ textAlign: 'center' }}>
                   <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                    {reserva.idReserva || 'N/A'}
+                    {item.reserva?.idReserva ?? 'N/A'}
                   </td>
                   <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                    {reserva.checkIn || 'N/A'}
+                    {item.reserva?.checkIn ?? 'N/A'}
                   </td>
                   <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                    {reserva.checkOut || 'N/A'}
+                    {item.reserva?.checkOut ?? 'N/A'}
                   </td>
                   <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                    {reserva.cliente.idCliente || 'N/A'}
+                    {item.cliente?.nombre ?? 'N/A'}
                   </td>
                   <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                    {reserva.habitacion.idHabitacion || 'N/A'}
+                    {item.cliente?.email ?? 'N/A'}
+                  </td>
+                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                    {item.reserva?.habitacion?.idHabitacion ?? 'N/A'}
                   </td>
                 </tr>
               ))}
