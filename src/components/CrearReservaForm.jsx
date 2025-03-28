@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
 function CrearReservaForm({ formData, setFormData, error, setError }) {
   const [clientes, setClientes] = useState([]);
   const [habitaciones, setHabitaciones] = useState([]);
+  const [reservaCreada, setReservaCreada] = useState(null);
+  const dialogRef = useRef(null);
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -46,13 +48,31 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
           'Content-Type': 'application/json'
         }
       });
+
       console.log('Respuesta del backend (crear):', response.data);
-      alert('Reserva creada con éxito: ' + response.data);
       setFormData({ checkIn: '', checkOut: '', idCliente: '', idHabitacion: '' });
+      setReservaCreada(response.data);
+
+      if (dialogRef.current) {
+        dialogRef.current.showModal();
+      }
+
     } catch (error) {
-      const errorMessage = error.response
-        ? `Error ${error.response.status}: ${error.response.data}`
-        : error.message;
+      let errorMessage = 'Ocurrió un error inesperado.';
+
+      if (error.response) {
+        const data = error.response.data;
+
+        if (data && data.message) {
+          const partes = data.message.split(':');
+          errorMessage = partes.length > 1 ? partes.slice(1).join(':').trim() : data.message;
+        } else {
+          errorMessage = error.response.statusText;
+        }
+      } else {
+        errorMessage = error.message;
+      }
+
       console.error('Error al crear la reserva:', errorMessage);
       setError(errorMessage);
     }
@@ -137,7 +157,38 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
           Enviar Reserva
         </button>
       </form>
+
       {error && <p style={{ color: 'red', marginBottom: '20px' }}>{error}</p>}
+
+      {/* Modal de confirmación */}
+      <dialog ref={dialogRef} style={{ borderRadius: '12px', padding: '20px', textAlign: 'center', minWidth: '300px' }}>
+        <h3 style={{ marginBottom: '15px' }}>✅ Reserva creada con éxito</h3>
+
+        {reservaCreada && (
+          <div style={{ marginBottom: '15px', fontSize: '14px', textAlign: 'left' }}>
+            <p><strong>ID Reserva:</strong> {reservaCreada.idReserva}</p>
+            <p><strong>Check-In:</strong> {reservaCreada.checkIn}</p>
+            <p><strong>Check-Out:</strong> {reservaCreada.checkOut}</p>
+            <p><strong>ID Cliente:</strong> {reservaCreada.idCliente}</p>
+            <p><strong>ID Habitación:</strong> {reservaCreada.habitacion?.idHabitacion}</p>
+            <p><strong>Número Habitación:</strong> {reservaCreada.habitacion?.numero}</p>
+          </div>
+        )}
+
+        <button
+          onClick={() => dialogRef.current.close()}
+          style={{
+            marginTop: '10px',
+            padding: '8px 16px',
+            backgroundColor: '#28a745',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px'
+          }}
+        >
+          Cerrar
+        </button>
+      </dialog>
     </div>
   );
 }
