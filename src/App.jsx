@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import ReservaForm from './components/ReservaForm';
+import ReservaPanel from './components/ReservaPanel';
 import Bienvenida from './components/Bienvenida';
 import PeticionInfinita from './components/PeticionInfinita';
 
@@ -22,8 +22,8 @@ function App() {
         💼 Gestión de Reservas ✨
       </motion.h1>
 
-      <div className="max-w-3xl mx-auto">
-        <ReservaForm />
+      <div className="max-w-6xl mx-auto">
+        <ReservaPanel />
         <PeticionInfinita />
       </div>
     </div>
