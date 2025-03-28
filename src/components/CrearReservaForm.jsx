@@ -20,19 +20,34 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
       }
     };
 
-    const fetchHabitaciones = async () => {
-      try {
-        const response = await axios.get('https://crudreservas.onrender.com/api/reservas/habitaciones');
-        setHabitaciones(response.data);
-      } catch (err) {
-        console.error('Error al obtener habitaciones:', err);
-        setError('No se pudo cargar la lista de habitaciones.');
+    fetchClientes();
+  }, [setError]);
+
+  useEffect(() => {
+    const fetchHabitacionesDisponibles = async () => {
+      if (formData.checkIn && formData.checkOut) {
+        try {
+          const response = await axios.get(
+            'https://crudreservas.onrender.com/api/reservas/habitaciones-disponibles',
+            {
+              params: {
+                checkIn: formData.checkIn,
+                checkOut: formData.checkOut
+              }
+            }
+          );
+          setHabitaciones(response.data);
+        } catch (err) {
+          console.error('Error al obtener habitaciones disponibles:', err);
+          setError('No se pudieron cargar las habitaciones disponibles.');
+        }
+      } else {
+        setHabitaciones([]);
       }
     };
 
-    fetchClientes();
-    fetchHabitaciones();
-  }, [setError]);
+    fetchHabitacionesDisponibles();
+  }, [formData.checkIn, formData.checkOut, setError]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,7 +121,7 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
             value={formData.checkOut}
             onChange={handleChange}
             required
-            min={hoy}
+            min={formData.checkIn || hoy}
             style={{ padding: '5px', width: '200px' }}
           />
         </div>
@@ -137,25 +152,36 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
             onChange={handleChange}
             required
             style={{ padding: '5px', width: '210px' }}
+            disabled={!formData.checkIn || !formData.checkOut}
           >
-            <option value="">-- Selecciona una habitación --</option>
-            {habitaciones.map((habitacion) => (
-              <option key={habitacion.id} value={habitacion.id}>
-                Nº {habitacion.numero}
-              </option>
-            ))}
+            {!formData.checkIn || !formData.checkOut ? (
+              <option value="">-- Selecciona una fecha primero --</option>
+            ) : habitaciones.length === 0 ? (
+              <option value="">No hay habitaciones disponibles para las fechas solicitadas</option>
+            ) : (
+              <>
+                <option value="">-- Selecciona una habitación --</option>
+                {habitaciones.map((habitacion) => (
+                  <option key={habitacion.id} value={habitacion.id}>
+                    Nº {habitacion.numero}
+                  </option>
+                ))}
+              </>
+            )}
           </select>
         </div>
         <button
           type="button"
           onClick={handleSubmit}
+          disabled={habitaciones.length === 0}
           style={{
             padding: '10px 20px',
-            backgroundColor: '#007bff',
+            backgroundColor: habitaciones.length === 0 ? '#ccc' : '#007bff',
             color: 'white',
             border: 'none',
             borderRadius: '5px',
-            marginRight: '10px'
+            marginRight: '10px',
+            cursor: habitaciones.length === 0 ? 'not-allowed' : 'pointer'
           }}
         >
           Enviar Reserva
