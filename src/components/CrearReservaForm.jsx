@@ -15,11 +15,9 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
         const response = await axios.get('https://crudclientes.onrender.com/clientes');
         setClientes(response.data);
       } catch (err) {
-        console.error('Error al obtener clientes:', err);
         setError('No se pudo cargar la lista de clientes.');
       }
     };
-
     fetchClientes();
   }, [setError]);
 
@@ -38,14 +36,12 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
           );
           setHabitaciones(response.data);
         } catch (err) {
-          console.error('Error al obtener habitaciones disponibles:', err);
           setError('No se pudieron cargar las habitaciones disponibles.');
         }
       } else {
         setHabitaciones([]);
       }
     };
-
     fetchHabitacionesDisponibles();
   }, [formData.checkIn, formData.checkOut, setError]);
 
@@ -60,47 +56,23 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
   const handleSubmit = async () => {
     setError(null);
     try {
-      const response = await axios.post('https://crudreservas.onrender.com/api/reservas/crear', formData, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      console.log('Respuesta del backend (crear):', response.data);
+      const response = await axios.post('https://crudreservas.onrender.com/api/reservas/crear', formData);
       setFormData({ checkIn: '', checkOut: '', idCliente: '', idHabitacion: '' });
       setReservaCreada(response.data);
-
-      if (dialogRef.current) {
-        dialogRef.current.showModal();
-      }
-
+      dialogRef.current?.showModal();
     } catch (error) {
-      let errorMessage = 'Ocurrió un error inesperado.';
-
-      if (error.response) {
-        const data = error.response.data;
-
-        if (data && data.message) {
-          const partes = data.message.split(':');
-          errorMessage = partes.length > 1 ? partes.slice(1).join(':').trim() : data.message;
-        } else {
-          errorMessage = error.response.statusText;
-        }
-      } else {
-        errorMessage = error.message;
-      }
-
-      console.error('Error al crear la reserva:', errorMessage);
-      setError(errorMessage);
+      const msg = error.response?.data?.message || error.message;
+      const parsed = msg.includes(':') ? msg.split(':').slice(1).join(':').trim() : msg;
+      setError(parsed);
     }
   };
 
   return (
-    <div>
-      <h2>Crear Reserva</h2>
-      <form onSubmit={(e) => e.preventDefault()} style={{ marginBottom: '30px' }}>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="checkIn">Check-In: </label>
+    <div className="bg-white shadow-lg rounded-xl p-6 mb-6">
+      <h2 className="text-xl font-semibold mb-4">Crear Reserva</h2>
+      <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+        <div>
+          <label htmlFor="checkIn" className="block font-medium mb-1">Check-In</label>
           <input
             type="date"
             id="checkIn"
@@ -109,11 +81,12 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
             onChange={handleChange}
             required
             min={hoy}
-            style={{ padding: '5px', width: '200px' }}
+            className="w-full border rounded px-3 py-2"
           />
         </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="checkOut">Check-Out: </label>
+
+        <div>
+          <label htmlFor="checkOut" className="block font-medium mb-1">Check-Out</label>
           <input
             type="date"
             id="checkOut"
@@ -122,18 +95,19 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
             onChange={handleChange}
             required
             min={formData.checkIn || hoy}
-            style={{ padding: '5px', width: '200px' }}
+            className="w-full border rounded px-3 py-2"
           />
         </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="idCliente">Cliente: </label>
+
+        <div>
+          <label htmlFor="idCliente" className="block font-medium mb-1">Cliente</label>
           <select
             id="idCliente"
             name="idCliente"
             value={formData.idCliente}
             onChange={handleChange}
             required
-            style={{ padding: '5px', width: '210px' }}
+            className="w-full border rounded px-3 py-2"
           >
             <option value="">-- Selecciona un cliente --</option>
             {clientes.map((cliente) => (
@@ -143,16 +117,17 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
             ))}
           </select>
         </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="idHabitacion">Habitación: </label>
+
+        <div>
+          <label htmlFor="idHabitacion" className="block font-medium mb-1">Habitación</label>
           <select
             id="idHabitacion"
             name="idHabitacion"
             value={formData.idHabitacion}
             onChange={handleChange}
             required
-            style={{ padding: '5px', width: '210px' }}
             disabled={!formData.checkIn || !formData.checkOut}
+            className="w-full border rounded px-3 py-2 disabled:opacity-50"
           >
             {!formData.checkIn || !formData.checkOut ? (
               <option value="">-- Selecciona una fecha primero --</option>
@@ -170,51 +145,38 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
             )}
           </select>
         </div>
+
         <button
           type="button"
           onClick={handleSubmit}
           disabled={habitaciones.length === 0}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: habitaciones.length === 0 ? '#ccc' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            marginRight: '10px',
-            cursor: habitaciones.length === 0 ? 'not-allowed' : 'pointer'
-          }}
+          className={`w-full py-2 px-4 rounded font-semibold transition ${
+            habitaciones.length === 0
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700 text-white'
+          }`}
         >
           Enviar Reserva
         </button>
       </form>
 
-      {error && <p style={{ color: 'red', marginBottom: '20px' }}>{error}</p>}
+      {error && <p className="text-red-600 mt-4">{error}</p>}
 
-      {/* Modal de confirmación */}
-      <dialog ref={dialogRef} style={{ borderRadius: '12px', padding: '20px', textAlign: 'center', minWidth: '300px' }}>
-        <h3 style={{ marginBottom: '15px' }}>✅ Reserva creada con éxito</h3>
-
+      <dialog ref={dialogRef} className="rounded-xl p-6 shadow-lg">
+        <h3 className="text-lg font-bold text-green-600 mb-4">✅ Reserva creada con éxito</h3>
         {reservaCreada && (
-          <div style={{ marginBottom: '15px', fontSize: '14px', textAlign: 'left' }}>
+          <div className="text-sm text-left space-y-1">
             <p><strong>ID Reserva:</strong> {reservaCreada.idReserva}</p>
             <p><strong>Check-In:</strong> {reservaCreada.checkIn}</p>
             <p><strong>Check-Out:</strong> {reservaCreada.checkOut}</p>
             <p><strong>ID Cliente:</strong> {reservaCreada.idCliente}</p>
             <p><strong>ID Habitación:</strong> {reservaCreada.habitacion?.idHabitacion}</p>
-            <p><strong>Número Habitación:</strong> {reservaCreada.habitacion?.numero}</p>
+            <p><strong>Número:</strong> {reservaCreada.habitacion?.numero}</p>
           </div>
         )}
-
         <button
-          onClick={() => dialogRef.current.close()}
-          style={{
-            marginTop: '10px',
-            padding: '8px 16px',
-            backgroundColor: '#28a745',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px'
-          }}
+          onClick={() => dialogRef.current?.close()}
+          className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
         >
           Cerrar
         </button>
