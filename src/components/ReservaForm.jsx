@@ -17,7 +17,7 @@ function ReservaForm() {
   const handleListarReservas = async () => {
     setError(null);
     try {
-      const response = await axios.get('http://localhost:8080/api/reservas/listar');
+      const response = await axios.get('https://crudreservas.onrender.com/api/reservas/listar');
       console.log('Datos recibidos del backend:', response.data);
       setReservas(response.data);
     } catch (error) {

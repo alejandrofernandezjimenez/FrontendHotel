@@ -13,7 +13,7 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
   const handleSubmit = async () => {
     setError(null);
     try {
-      const response = await axios.post('http://localhost:8080/api/reservas/crear', formData, {
+      const response = await axios.post('https://crudreservas.onrender.com/api/reservas/crear', formData, {
         headers: {
           'Content-Type': 'application/json'
         }
