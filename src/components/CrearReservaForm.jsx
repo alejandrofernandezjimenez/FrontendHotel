@@ -1,7 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function CrearReservaForm({ formData, setFormData, error, setError }) {
+  const [clientes, setClientes] = useState([]);
+  const [habitaciones, setHabitaciones] = useState([]);
+
+  useEffect(() => {
+    const fetchClientes = async () => {
+      try {
+        const response = await axios.get('https://crudclientes.onrender.com/clientes');
+        setClientes(response.data);
+      } catch (err) {
+        console.error('Error al obtener clientes:', err);
+        setError('No se pudo cargar la lista de clientes.');
+      }
+    };
+
+    const fetchHabitaciones = async () => {
+      try {
+        const response = await axios.get('https://crudreservas.onrender.com/api/reservas/habitaciones');
+        setHabitaciones(response.data);
+      } catch (err) {
+        console.error('Error al obtener habitaciones:', err);
+        setError('No se pudo cargar la lista de habitaciones.');
+      }
+    };
+
+    fetchClientes();
+    fetchHabitaciones();
+  }, [setError]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -59,35 +87,52 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
           />
         </div>
         <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="idCliente">ID Cliente: </label>
-          <input
-            type="number"
+          <label htmlFor="idCliente">Cliente: </label>
+          <select
             id="idCliente"
             name="idCliente"
             value={formData.idCliente}
             onChange={handleChange}
             required
-            min="1"
-            style={{ padding: '5px', width: '200px' }}
-          />
+            style={{ padding: '5px', width: '210px' }}
+          >
+            <option value="">-- Selecciona un cliente --</option>
+            {clientes.map((cliente) => (
+              <option key={cliente.id} value={cliente.id}>
+                {cliente.nombre}
+              </option>
+            ))}
+          </select>
         </div>
         <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="idHabitacion">ID Habitación: </label>
-          <input
-            type="number"
+          <label htmlFor="idHabitacion">Habitación: </label>
+          <select
             id="idHabitacion"
             name="idHabitacion"
             value={formData.idHabitacion}
             onChange={handleChange}
             required
-            min="1"
-            style={{ padding: '5px', width: '200px' }}
-          />
+            style={{ padding: '5px', width: '210px' }}
+          >
+            <option value="">-- Selecciona una habitación --</option>
+            {habitaciones.map((habitacion) => (
+              <option key={habitacion.id} value={habitacion.id}>
+                Nº {habitacion.numero}
+              </option>
+            ))}
+          </select>
         </div>
         <button
           type="button"
           onClick={handleSubmit}
-          style={{ padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px', marginRight: '10px' }}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            marginRight: '10px'
+          }}
         >
           Enviar Reserva
         </button>
