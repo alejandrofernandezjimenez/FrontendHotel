@@ -7,6 +7,8 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
   const [reservaCreada, setReservaCreada] = useState(null);
   const dialogRef = useRef(null);
 
+  const hoy = new Date().toISOString().split('T')[0];
+
   useEffect(() => {
     const fetchClientes = async () => {
       try {
@@ -91,6 +93,7 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
             value={formData.checkIn}
             onChange={handleChange}
             required
+            min={hoy}
             style={{ padding: '5px', width: '200px' }}
           />
         </div>
@@ -103,6 +106,7 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
             value={formData.checkOut}
             onChange={handleChange}
             required
+            min={hoy}
             style={{ padding: '5px', width: '200px' }}
           />
         </div>
