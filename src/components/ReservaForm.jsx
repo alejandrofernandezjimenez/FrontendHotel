@@ -17,7 +17,7 @@ function ReservaForm() {
   const handleListarReservas = async () => {
     setError(null);
     try {
-      const response = await axios.get('http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/listar');
+      const response = await axios.get('https://d1v6xxnlv6ndjg.cloudfront.net/api/reservas/listar');
       console.log('Datos recibidos del backend:', response.data);
       setReservas(response.data);
     } catch (error) {
