@@ -12,7 +12,7 @@ function EliminarReservaForm() {
   useEffect(() => {
     const fetchReservas = async () => {
       try {
-        const response = await axios.get('https://crudreservas.onrender.com/api/reservas/listar');
+        const response = await axios.get('http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/listar');
         setReservas(response.data);
       } catch (err) {
         console.error('Error al cargar reservas:', err);
@@ -31,7 +31,7 @@ function EliminarReservaForm() {
   const handleDelete = async () => {
     try {
       setCargando(true);
-      await axios.delete(`https://crudreservas.onrender.com/api/reservas/eliminar/${reservaSeleccionada}`);
+      await axios.delete(`http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/eliminar/${reservaSeleccionada}`);
       setMensaje('✅ Reserva eliminada con éxito');
       setReservas(prev => prev.filter(r => r.reserva.idReserva !== parseInt(reservaSeleccionada)));
       setReservaSeleccionada('');

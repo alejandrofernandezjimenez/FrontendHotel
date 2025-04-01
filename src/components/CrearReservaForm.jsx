@@ -26,7 +26,7 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
       if (formData.checkIn && formData.checkOut) {
         try {
           const response = await axios.get(
-            'https://crudreservas.onrender.com/api/reservas/habitaciones-disponibles',
+            'http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/habitaciones-disponibles',
             {
               params: {
                 checkIn: formData.checkIn,
@@ -56,7 +56,7 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
   const handleSubmit = async () => {
     setError(null);
     try {
-      const response = await axios.post('https://crudreservas.onrender.com/api/reservas/crear', formData);
+      const response = await axios.post('http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/crear', formData);
       setFormData({ checkIn: '', checkOut: '', idCliente: '', idHabitacion: '' });
       setReservaCreada(response.data);
       dialogRef.current?.showModal();

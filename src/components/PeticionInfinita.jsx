@@ -1,7 +1,7 @@
 const PeticionInfinita = () => {
     async function obtenerReservas() {
         try {
-          const response = await fetch("https://crudreservas.onrender.com/api/reservas/listar");
+          const response = await fetch("http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/listar");
           if (!response.ok) {
             throw new Error("Error en la solicitud: " + response.status);
           }

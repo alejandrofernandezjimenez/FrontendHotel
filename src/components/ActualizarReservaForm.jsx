@@ -18,9 +18,9 @@ function ActualizarReservaForm() {
     const fetchData = async () => {
       try {
         const [res, cli, hab] = await Promise.all([
-          axios.get('https://crudreservas.onrender.com/api/reservas/listar'),
+          axios.get('http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/listar'),
           axios.get('https://crudclientes.onrender.com/clientes'),
-          axios.get('https://crudreservas.onrender.com/api/reservas/habitaciones')
+          axios.get('http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/habitaciones')
         ]);
         setReservas(res.data);
         setClientes(cli.data);
@@ -56,7 +56,7 @@ function ActualizarReservaForm() {
   const handleSubmit = async () => {
     try {
       const res = await axios.put(
-        `https://crudreservas.onrender.com/api/reservas/actualizar/${reservaSeleccionada}`,
+        `http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/actualizar/${reservaSeleccionada}`,
         formData,
         { headers: { 'Content-Type': 'application/json' } }
       );

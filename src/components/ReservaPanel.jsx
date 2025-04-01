@@ -21,7 +21,7 @@ function ReservaPanel() {
         setCargando(true);
         setVista('listar');
         try {
-            const res = await fetch('https://crudreservas.onrender.com/api/reservas/listar');
+            const res = await fetch('http://testaws-env.eba-6swprbqg.eu-north-1.elasticbeanstalk.com/api/reservas/listar');
             const data = await res.json();
             setReservas(data);
         } catch (err) {
