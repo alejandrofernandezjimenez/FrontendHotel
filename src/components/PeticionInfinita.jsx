@@ -1,4 +1,4 @@
-const PeticionInfinita = () => {
+/*const PeticionInfinita = () => {
     async function obtenerReservas() {
         try {
           const response = await fetch("https://d1v6xxnlv6ndjg.cloudfront.net/api/reservas/listar");
@@ -21,3 +21,4 @@ const PeticionInfinita = () => {
 }
 
 export default PeticionInfinita;
+*/
