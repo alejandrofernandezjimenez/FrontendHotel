@@ -19,7 +19,7 @@ function ActualizarReservaForm() {
       try {
         const [res, cli, hab] = await Promise.all([
           axios.get('https://d1v6xxnlv6ndjg.cloudfront.net/api/reservas/listar'),
-          axios.get('https://crudclientes.onrender.com/clientes'),
+          axios.get('https://d1kyl7ajtmjgoz.cloudfront.net'),
           axios.get('https://d1v6xxnlv6ndjg.cloudfront.net/api/reservas/habitaciones')
         ]);
         setReservas(res.data);

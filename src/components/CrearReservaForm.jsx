@@ -12,7 +12,7 @@ function CrearReservaForm({ formData, setFormData, error, setError }) {
   useEffect(() => {
     const fetchClientes = async () => {
       try {
-        const response = await axios.get('https://crudclientes.onrender.com/clientes');
+        const response = await axios.get('https://d1kyl7ajtmjgoz.cloudfront.net');
         setClientes(response.data);
       } catch (err) {
         setError('No se pudo cargar la lista de clientes.');
