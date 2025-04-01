@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import ReservaPanel from './components/ReservaPanel';
 import Bienvenida from './components/Bienvenida';
-import PeticionInfinita from './components/PeticionInfinita';
 
 function App() {
   return (
@@ -24,7 +23,7 @@ function App() {
 
       <div className="max-w-6xl mx-auto">
         <ReservaPanel />
-        <PeticionInfinita />
+        
       </div>
     </div>
   );
